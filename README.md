@@ -36,6 +36,6 @@ function detectWebdriver(){
 
 Now that I know the cause, I'll begin working on it!
 
-## **Log #1: Oct 05, 2020 4:20 PM**
+## **Log #2: Oct 05, 2020 4:20 PM**
 
 Added a configuration file, from which the program will read the URL, user name and password. Also extracted the function into a method, so later can ease the process of calling it.
