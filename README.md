@@ -4,7 +4,7 @@ It's such a hassle to declare the temperature to the company twice every day. An
 
 [Selenium](https://selenium-python.readthedocs.io) will be used to do the job for Ranran.
 
-> Log #1: Oct 04, 2020 2:59 PM
+## **Log #1: Oct 04, 2020 2:59 PM**
 
 Last night I roughly finished the functions of using Selenium to submit the temperature. Only that there was a problem: it will fail and produce an error when Selenium clicks the "Submit" button.
 
@@ -16,7 +16,7 @@ I guessed it might be because the web page I'm accessing detects the other party
 
 A simple Google search leaded me to this stack**overflow** post [*Can a website detect when you are using selenium with chromedriver?*](https://stackoverflow.com/questions/33225947/can-a-website-detect-when-you-are-using-selenium-with-chromedriver#41220267) 
 
-I didn't read carefully the post, but this confirmed my hypothesis. So I got my hands dirty to read the page source. And luckily I found the following JavaScript snippet.
+I didn't read through the post, but this did confirm my hypothesis. So I got my hands dirty to read the page source. And luckily I found the following JavaScript snippet.
 
 ```JavaScript
 function detectWebdriver(){
@@ -35,3 +35,7 @@ function detectWebdriver(){
 ```
 
 Now that I know the cause, I'll begin working on it!
+
+## **Log #1: Oct 05, 2020 4:20 PM**
+
+Added a configuration file, from which the program will read the URL, user name and password. Also extracted the function into a method, so later can ease the process of calling it.
