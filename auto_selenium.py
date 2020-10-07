@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import json
+import schedule
+import time
 
 # profile = webdriver.FirefoxProfile()
 # profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
@@ -68,7 +70,15 @@ def upload_temp(apm = PM):
     driver.execute_script("document.dlytemperature.webdriverFlag.value = '';")
 
     btn_submit = wait.until(EC.element_to_be_clickable((By.NAME, 'Save')))
-    btn_submit.click()
+    # btn_submit.click()
+    print('submit the temperature, button clicked')
     driver.close()
 
 upload_temp(AM)
+
+schedule.every().day.at('8:30').do(upload_temp, apm=AM)
+schedule.every().day.at('13:30').do(upload_temp, apm=PM)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
