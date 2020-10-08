@@ -1,10 +1,38 @@
 # declare-temp-daily
 
-It's such a hassle to declare the temperature to the company twice every day. And I tend to forget to do so from time to time. This piece of Python program will do this boring chore for me and my wife.
+It's such a hassle **to declare the temperature to the company twice every day**. And I tend to forget to do so from time to time. This piece of Python program will do this boring chore for me and my wife.
 
-[Selenium](https://selenium-python.readthedocs.io) will be used to do the job.
+## Prerequisites
+* [Selenium](https://selenium-python.readthedocs.io) will be used to do the job.
+* [schedule](https://pypi.org/project/schedule/) is used to run the task twice daily.
 
-## **Log #1: Oct 04, 2020 2:59 PM**
+```bash
+pip install selenium
+pip install schedule
+```
+
+## Run the code
+
+```bash
+python auto_selenium.py
+```
+The program will open a Chrome window in Incognito mode, log into the company website, and then update the temperature.
+
+## Note
+* Linting using `flake8` and `pydocstyle`.
+* I hided the `url`, `user` and `password` in the `config` file.
+
+```json
+{
+    "url": "YOU_URL",
+    "user": "YOUR_USER_NAME",
+    "password": "YOUR_PASSWORD"
+}
+```
+---
+## Logs
+
+### **Log #1: Oct 04, 2020 2:59 PM**
 
 Last night I roughly finished the functions of using Selenium to submit the temperature. Only that there was a problem: it will fail and produce an error when Selenium clicks the "Submit" button.
 
@@ -36,11 +64,11 @@ function detectWebdriver(){
 
 Now that I know the cause, I'll begin working on it!
 
-## **Log #2: Oct 05, 2020 4:20 PM**
+### **Log #2: Oct 05, 2020 4:20 PM**
 
 Added a configuration file, from which the program will read the URL, user name and password. Also extracted the function into a method, so later can ease the process of calling it.
 
-## **Log #3: Oct 07, 2020 7:31 PM**
+### **Log #3: Oct 07, 2020 7:31 PM**
 
 I added in the [schedule](https://pypi.org/project/schedule/) package by `Daniel Bader` to run the task every day in the morning and afternoon.
 

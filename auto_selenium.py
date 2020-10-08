@@ -1,4 +1,4 @@
-# coding: utf-8
+"""Automatically upload temperature to company website twice every day."""
 from selenium import webdriver
 import random
 from selenium.webdriver.common.keys import Keys
@@ -9,16 +9,13 @@ import json
 import schedule
 import time
 
-# profile = webdriver.FirefoxProfile()
-# profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
-# driver = webdriver.Firefox(profile)
-# # driver.implicitly_wait(10) # seconds
 
 AM = 'A'
 PM = 'P'
 
-# generate a random temperature based on APM
+
 def generate_temp(apm):
+    """Generate a random temperature based on APM."""
     base_part = 36.0 if apm == AM else 36.5
     rand_part = random.random() * 0.5
     temp = base_part + rand_part
@@ -26,8 +23,8 @@ def generate_temp(apm):
     return str(temp)
 
 
-# upload the temperature
-def upload_temp(apm = PM):
+def upload_temp(apm=PM):
+    """Upload the temperature."""
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--incognito")
     driver = webdriver.Chrome(options=chrome_options)
@@ -51,30 +48,33 @@ def upload_temp(apm = PM):
     ele_psw.send_keys(Keys.ENTER)
 
     # no for symptoms flag
-    radio_symptom = wait.until(EC.element_to_be_clickable((By.NAME, 'symptomsFlag')))
+    radio_symptom = wait.until(
+        EC.element_to_be_clickable((By.NAME, 'symptomsFlag')))
     radio_symptom.click()
 
     # no for family symptoms flag
-    radio_family_symptom = wait.until(EC.element_to_be_clickable((By.NAME, 'familySymptomsFlag')))
+    radio_family_symptom = wait.until(
+        EC.element_to_be_clickable((By.NAME, 'familySymptomsFlag')))
     radio_family_symptom.click()
 
     # set temperature
-    input_temp = wait.until(EC.presence_of_element_located((By.ID, 'temperature')))
+    input_temp = wait.until(
+        EC.presence_of_element_located((By.ID, 'temperature')))
     temp = generate_temp(apm)
     input_temp.send_keys(temp)
 
     # set AM or PM
-    driver.execute_script("document.dlytemperature.declFrequency.value = " + "'" + apm + "'" + ";")
+    s_set_apm = "document.dlytemperature.declFrequency.value = '" + apm + "';"
+    driver.execute_script(s_set_apm)
 
     # disable the web driver detector
     driver.execute_script("document.dlytemperature.webdriverFlag.value = '';")
 
     btn_submit = wait.until(EC.element_to_be_clickable((By.NAME, 'Save')))
-    # btn_submit.click()
-    print('submit the temperature, button clicked')
+    btn_submit.click()
+    print('submitted the temperature', temp)
     driver.close()
 
-upload_temp(AM)
 
 schedule.every().day.at('8:30').do(upload_temp, apm=AM)
 schedule.every().day.at('13:30').do(upload_temp, apm=PM)
