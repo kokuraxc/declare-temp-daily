@@ -30,7 +30,7 @@ def upload_temp(apm=PM):
     driver = webdriver.Chrome(options=chrome_options)
 
     # read the config from JSON file
-    with open('config', 'r') as f:
+    with open('.config', 'r') as f:
         config = json.load(f)
     url = config['url']
     user = config['user']
@@ -76,9 +76,10 @@ def upload_temp(apm=PM):
     driver.close()
 
 
-schedule.every().day.at('8:30').do(upload_temp, apm=AM)
-schedule.every().day.at('13:30').do(upload_temp, apm=PM)
+if __name__ == '__main__':
+    schedule.every().day.at('8:30').do(upload_temp, apm=AM)
+    schedule.every().day.at('13:30').do(upload_temp, apm=PM)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

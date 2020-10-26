@@ -20,7 +20,7 @@ The program will open a Chrome window in Incognito mode, log into the company we
 
 ## Note
 * Linting using `flake8` and `pydocstyle`.
-* I hided the `url`, `user` and `password` in the `config` file.
+* I hided the `url`, `user` and `password` in the `.config` file.
 
 ```json
 {
