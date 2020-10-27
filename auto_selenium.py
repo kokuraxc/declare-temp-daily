@@ -6,8 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import json
-import schedule
-import time
+# import schedule
+# import time
 
 
 AM = 'A'
@@ -23,7 +23,7 @@ def generate_temp(apm):
     return str(temp)
 
 
-def upload_temp(apm=PM):
+def upload_temp(apm, temp):
     """Upload the temperature."""
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--incognito")
@@ -60,7 +60,6 @@ def upload_temp(apm=PM):
     # set temperature
     input_temp = wait.until(
         EC.presence_of_element_located((By.ID, 'temperature')))
-    temp = generate_temp(apm)
     input_temp.send_keys(temp)
 
     # set AM or PM
@@ -73,13 +72,15 @@ def upload_temp(apm=PM):
     btn_submit = wait.until(EC.element_to_be_clickable((By.NAME, 'Save')))
     btn_submit.click()
     print('submitted the temperature', temp)
-    driver.close()
+    # driver.close()
 
 
-if __name__ == '__main__':
-    schedule.every().day.at('8:30').do(upload_temp, apm=AM)
-    schedule.every().day.at('13:30').do(upload_temp, apm=PM)
+# if __name__ == '__main__':
+#     temp = generate_temp(apm=AM)
+#     schedule.every().day.at('8:30').do(upload_temp, temp=temp)
+#     temp = generate_temp(apm=PM)
+#     schedule.every().day.at('13:30').do(upload_temp, temp=temp)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
