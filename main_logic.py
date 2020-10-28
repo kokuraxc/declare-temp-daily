@@ -3,12 +3,13 @@ import sqlite3
 import datetime
 import time
 from auto_selenium import generate_temp, upload_temp
+import random
 
 
 def get_dt_str():
     """Get the date time string in the format of 2020-10-26-PM."""
     x = datetime.datetime.now()
-    return x.strftime('%Y-%m-%d-%p')[:-1]  # change AM, PM to A, P
+    return x.strftime('%Y-%m-%d-%p')[:-1], x.strftime('%H%M')  # remove A/P[M]
 
 
 def is_temp_recorded(db_cursor, dt_str):
@@ -27,10 +28,32 @@ def insert_record(db_conn, db_cursor, dt_str, temp):
     print('Saved', dt_str, temp, 'to database.')
 
 
-def update_web_and_db(db_conn, db_cur, dt_str):
+def is_time_permit(apm, time_str):
+    """
+    Check whether time permits proceeding.
+
+    Disregard the random number,
+    For AM: time_str should > 0820
+    For PM: time_str should > 1220
+    """
+    rand_min = str(random.randrange(20, 40))
+    if apm == 'A':
+        rand_min = '08' + rand_min
+    else:
+        rand_min = '12' + rand_min
+
+    if time_str < rand_min:
+        return False
+    return True
+
+
+def update_web_and_db(db_conn, db_cur, dt_str, time_str):
     """Update the temp in website and database."""
+    apm = dt_str[-1]
+    if not is_time_permit(apm, time_str):
+        return
+
     if not is_temp_recorded(db_cur, dt_str):
-        apm = dt_str[-1]
         temp = generate_temp(apm)
         upload_temp(apm, temp)
         insert_record(db_conn, db_cur, dt_str, temp)
@@ -52,11 +75,11 @@ cur.execute(query_create)
 conn.commit()
 
 while True:
-    cur_dt_str = get_dt_str()
+    cur_dt_str, time_str = get_dt_str()
     if cur_dt_str.endswith('P'):
         am_dt_str = cur_dt_str.replace('P', 'A')
-        update_web_and_db(conn, cur, am_dt_str)
-    update_web_and_db(conn, cur, cur_dt_str)
+        update_web_and_db(conn, cur, am_dt_str, time_str)
+    update_web_and_db(conn, cur, cur_dt_str, time_str)
     time.sleep(60)  # sleep for 1 min
 
 conn.close()
